@@ -25,7 +25,7 @@ from math import sqrt
 from sklearn.preprocessing import MinMaxScaler,StandardScaler
 from pyproj import Transformer
 #%%
-df=pd.read_csv(r'/home/liyunjia/data/AIS_data_process/trajectory_calculate_new/trajectory_01.csv')
+df=pd.read_csv(r'/home/liyunjia/data/AIS_data_process/trajectory_all_new/过程数据/trajectory_01.csv')
 BJS_format = "%Y-%m-%d %H:%M:%S" 
 df['Receivedtime（UTC+8）'] = df['Receivedtime（UTC+8）'].apply(lambda x: datetime.strptime(x, BJS_format))
 lon_lat=df[['Lon_d','Lat_d']]
@@ -61,14 +61,18 @@ for mmsi in tqdm(mmsi_list):
 #%%
 df=data_to_up_cluster_after
 #%%
-BJS_format = "%Y-%m-%d %H:%M:%S"
-df['Receivedtime（UTC+8）'] = df['Receivedtime（UTC+8）'].apply(lambda x: datetime.strptime(x, BJS_format))
+#%%
+# BJS_format = "%Y-%m-%d %H:%M:%S"
+# df['Receivedtime（UTC+8）'] = df['Receivedtime（UTC+8）'].apply(lambda x: datetime.strptime(x, BJS_format))
 #小时和周几 进行划分
 df['hour'] = df['Receivedtime（UTC+8）'].dt.hour
 df['weekday'] = df['Receivedtime（UTC+8）'].dt.weekday
 #白天黑夜划分
 df['day_nig'] = 0
 df.loc[(df['hour'] > 5) & (df['hour'] < 20),'day_nig'] = 1
+#%%
+df['MMSI_paragraph']=df['MMSI'].map(str)+'_'+df['paragraph'].map(str)
+#%%
 
 #%%
 #按照df进行提取特征
